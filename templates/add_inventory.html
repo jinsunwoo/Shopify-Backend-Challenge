@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Inventory Tracker</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+    <link rel="stylesheet" href="../static/styles.css?ver=90">
+    <script>
+    </script>
+</head>
+<body class="background_color">
+    <form class="add_invent_form" action="/action_page.php">
+        <div id="add_inv_btn">
+            <input type="submit" value="Save" class="navbar_btn2">
+        </div>
+        <label class="label_att"></label><br>
+        <label class="label_att"></label><br>
+        <label class="label_att">Name:</label><br>
+        <input class="input_att" type="text"><br><br>
+        <p><label class="label_att">Description:</label></p>
+        <textarea class="textarea_att"></textarea><br><br>
+        <label class="label_att">Manufacturer:</label><br>
+        <input class="input_att" type="text"><br><br>
+        <label class="label_att">Model:</label><br>
+        <input class="input_att" type="text"><br><br>
+        <label class="label_att">Barcode:</label><br>
+        <input class="input_att" type="text"><br><br>
+        <label class="label_att">Serial Number:</label><br>
+        <input class="input_att" type="text"><br><br>
+        <label class="label_att">Category:</label><br>
+        <input class="input_att" type="text"><br><br>
+        <label class="label_att">Warehouse Location:</label><br>
+        <select id="cars" name="cars">
+            <option value="volvo">Volvo</option>
+            <option value="saab">Saab</option>
+            <option value="fiat">Fiat</option>
+            <option value="audi">Audi</option>
+          </select><br><br>
+        <label class="label_att">Quantity:</label><br>
+        <input class="input_att" type="text"><br><br>
+        <label class="label_att">Purchase Price:</label><br>
+        <input class="input_att" type="text"><br><br>
+        <label class="label_att">Purchase Date:</label><br>
+        <input class="input_att" type="text"><br><br>
+        <p><label class="label_att">Notes:</label></p>
+        <textarea class="textarea_att"></textarea><br><br>
+      </form> 
+</body>
+</html>
