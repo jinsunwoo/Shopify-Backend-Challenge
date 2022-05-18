@@ -1,4 +1,3 @@
-from multiprocessing.sharedctypes import Value
 from pymongo import MongoClient
 from flask import Flask, render_template, jsonify, request
 from bson.objectid import ObjectId
@@ -14,7 +13,6 @@ def home():
 @app.route("/add_inventory")
 def add_inventory():
     return render_template("add_inventory.html")
-
 
 @app.route('/api/add_warehouse', methods=['POST'])
 def add_warehouse():
@@ -33,7 +31,6 @@ def add_warehouse():
     else:
         db.warehouse.insert_one({'location': warehouse_receive})
         return jsonify({'result': 'success'})
-
 
 @app.route('/api/get_warehouse', methods=['GET'])
 def get_warehouse():
@@ -105,9 +102,6 @@ def put_inventory():
     db.inventory.update_one({'_id': ObjectId(id_receive)}, {"$set": inventory})
     return jsonify({'result': 'success'})
 
-
-
-
 @app.route('/api/get_inventory_list', methods=['GET'])
 def get_inventory_list():
     db_inventory_list = list(db.inventory.find({}))
@@ -116,13 +110,11 @@ def get_inventory_list():
         inventory['_id'] = id
     return jsonify({'result': 'success', 'inventory_list': db_inventory_list})
 
-
 @app.route('/api/delete_inventory', methods=['DELETE'])
 def delete_inventory():
     id_receive = request.form['id_give']
     db.inventory.delete_one({'_id': ObjectId(id_receive)})
     return jsonify({'result': 'success'})
-
 
 @app.route('/api/edit_inventory')
 def edit_inventory():
@@ -162,4 +154,5 @@ def edit_inventory():
                                 notes = notes)
 
 if __name__ == '__main__':
-    app.run('0.0.0.0', port=5000, debug=True)
+    app.run('0.0.0.0', port=8000, debug=True)
+    

@@ -16,7 +16,7 @@
             <form>
                 <input type="submit" value="Back" class="navbar_btn2" id="back_btn" formaction="{{ url_for('home') }}">
             </form>
-            <input type="submit" value="Save" class="navbar_btn2" onclick="edit_inventory();">
+            <input type="submit" value="Save" class="navbar_btn2" onclick="edit_inventory(event);">
         </div>
         <div class="add_invent_detail">
             <label class="label_att"></label><br>
@@ -85,7 +85,8 @@
             document.getElementById("inv_notes").value = "{{ notes }}"
         }
 
-        function edit_inventory() {
+        function edit_inventory(event) {
+            event.preventDefault();
             let id = "{{ id }}"
             let name = $('#inv_name').val();
             let description = $('#inv_desc').val();

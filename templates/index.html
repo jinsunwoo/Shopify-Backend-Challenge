@@ -27,7 +27,7 @@
                 <form class="form-container">
                   <h2 class="label_att">Add Warehouse</h2>
                   <input id="add_ware_att"type="text" placeholder="Enter Warehouse Location" name="email" required>
-                  <button type="submit" class="btn" onclick="save_warehouse();">Save</button>
+                  <button type="submit" class="btn" onclick="save_warehouse(event);">Save</button>
                   <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
                 </form>
             </div>
@@ -109,7 +109,8 @@
         
 
 
-        function save_warehouse() {
+        function save_warehouse(event) {
+                event.preventDefault();
                 let warehouse = $('#add_ware_att').val(); 
                 if (warehouse == "") {
                     alert('Please enter warehouse location')
