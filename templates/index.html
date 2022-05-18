@@ -17,51 +17,29 @@
             <h3 id="subtitle">Shopify Fall 2022 Backend Technical Challenge</h3>
         </div>
         <div class="add_btns">
-            <button type="submit" class="navbar_btn" id="applied" name="applied">Add Inventory</button>
-            <button type="submit" class="navbar_btn" id="phone" name="phone" onclick="openForm()">Add Warehouse</button>
+            <form>
+                <button type="submit" formaction="{{ url_for('add_inventory') }}"
+                       class="navbar_btn">Add Inventory</button>
+            </form> 
+            <button type="submit" class="navbar_btn" name="phone" onclick="openForm()">Add Warehouse</button>
+            
             <div class="form-popup" id="myForm">
-                <form action="/action_page.php" class="form-container">
+                <form class="form-container">
                   <h2 class="label_att">Add Warehouse</h2>
-                  <input id="add_ware_att"type="text" placeholder="Enter Warehouse Name" name="email" required>
-                  <button type="submit" class="btn">Login</button>
+                  <input id="add_ware_att"type="text" placeholder="Enter Warehouse Location" name="email" required>
+                  <button type="submit" class="btn" onclick="save_warehouse();">Save</button>
                   <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
                 </form>
             </div>
         </div>
     </div>
-    <div class="card-list">
-        <div class="card">
-            <div class="inventory-content">
-                <p class="detail_att">Name: NFT collector</p>
-                <p class="detail_att">Quantity: 3</p>
-                <p class="detail_att">Serial Number: SE02Z32</p>
-                <p class="detail_att">Warehouse Location: Default</p>
-            </div>
-            <button class="navbar_btn3" id="myBtn" name="applied">Detail</button>
-            <!-- The Modal -->
-            <div id="myModal" class="modal">
-                <!-- Modal content -->
-                <div class="modal-content">
-                <span class="close">&times;</span>
-                    <p class="detail_att">Name: NFT collector</p> 
-                    <p class="detail_att">Description: This is a NFT collector used to collect NFT</p>
-                    <p class="detail_att">Manufacturer: Coinbase</p>
-                    <p class="detail_att">Model: SIV12</p>
-                    <p class="detail_att">Barcode: 1234576899</p>
-                    <p class="detail_att">Serial Number: SE02Z32</p>
-                    <p class="detail_att">Category: NFT</p>
-                    <p class="detail_att">Warehouse Location: Default</p>
-                    <p class="detail_att">Quantity: 3</p>
-                    <p class="detail_att">Purchase Price: $1800</p>
-                    <p class="detail_att">Purchase Date: June 18, 2021</p>
-                    <p class="detail_att">Notes: None</p>
-                </div>
-            </div> 
-            <button type="submit" class="navbar_btn3" id="applied" name="applied">Edit</button>
-            <button type="submit" class="navbar_btn4" id="phone" name="phone">Delete</button>
-        </div>
+    <div id="card_list">
     </div>
     <script>
+        $(document).ready(function(){
+            load_inventory_list()
+        });
+
         function openForm() {
           document.getElementById("myForm").style.display = "block";
         }
@@ -69,33 +47,124 @@
         function closeForm() {
           document.getElementById("myForm").style.display = "none";
         }
-        // Get the modal
-        var modal = document.getElementById("myModal");
 
-        // Get the button that opens the modal
-        var btn = document.getElementById("myBtn");
+        function load_inventory_list(){
+            $.ajax({
+                type: "GET",
+                url: "/api/get_inventory_list",
+                data: {},
+                success: function(response){
+                    let inventory_list = response['inventory_list']
+                    for (let i = 0; i < inventory_list.length; i++) {
+                       let inventory = inventory_list[i]
+                       let id = inventory['_id']
+                       let name = inventory['name']
+                       let description = inventory['description']
+                       let manufacturer = inventory['manufacturer']
+                       let model = inventory['model']
+                       let barcode = inventory['barcode']
+                       let serial_number = inventory['serial_number']
+                       let category = inventory['category']
+                       let warehouse_location = inventory['warehouse_location']
+                       let quantity = inventory['quantity']
+                       let purchase_price = inventory['purchase_price']
+                       let purchase_date = inventory['purchase_date']
+                       let notes = inventory['notes']
+                       let tempHtml = `
+                       <div class="card">
+                        <div class="inventory-content">
+                            <p class="detail_att">Name: ${name}</p>
+                            <p class="detail_att">Quantity: ${quantity}</p>
+                            <p class="detail_att">Serial Number: ${serial_number}</p>
+                            <p class="detail_att">Warehouse Location: ${warehouse_location}</p>
+                        </div>
+                        <button class="navbar_btn3" id="myBtn${i}" name="modal" onclick="modal_play(${i});">Detail</button>
+                        <!-- The Modal -->
+                        <div id="myModal${i}" class="modal">
+                            <!-- Modal content -->
+                            <div class="modal-content">
+                            <span class="close" onclick="modal_close(${i});">&times;</span>
+                                <p class="detail_att">Name: ${name}</p> 
+                                <p class="detail_att">Description: ${description}</p>
+                                <p class="detail_att">Manufacturer: ${manufacturer}</p>
+                                <p class="detail_att">Model: ${model}</p>
+                                <p class="detail_att">Barcode: ${barcode}</p>
+                                <p class="detail_att">Serial Number: ${serial_number}</p>
+                                <p class="detail_att">Category: ${category}</p>
+                                <p class="detail_att">Warehouse Location: ${warehouse_location}</p>
+                                <p class="detail_att">Quantity: ${quantity}</p>
+                                <p class="detail_att">Purchase Price: ${purchase_price}</p>
+                                <p class="detail_att">Purchase Date: ${purchase_date}</p>
+                                <p class="detail_att">Notes: ${notes}</p>
+                            </div>
+                        </div> 
+                        <button class="navbar_btn3" name="${id}" onclick="edit_inventory(this.name);">Edit</button>
+                        <button class="navbar_btn4" name="${id}" onclick="remove_inventory(this.name);">Delete</button>
+                    </div>`
+                       $('#card_list').append(tempHtml)
+                    }
+                }
+            })
+        }
+        
 
-        // Get the <span> element that closes the modal
-        var span = document.getElementsByClassName("close")[0];
 
-        // When the user clicks the button, open the modal 
-        btn.onclick = function() {
+        function save_warehouse() {
+                let warehouse = $('#add_ware_att').val(); 
+                if (warehouse == "") {
+                    alert('Please enter warehouse location')
+                } else {
+                    $.ajax({
+                        type: "POST",
+                        url: "/api/add_warehouse",
+                        data: {
+                            warehouse_give: warehouse,
+                        },
+                        success: function (response) {
+                            if (response['result'] == 'success') {
+                                alert('Saved the warehouse location you entered')
+                                window.location.href = '/'
+                            } else if (response['result'] == 'taken') {
+                                alert(response['msg'])
+                            } else {
+                                alert('error')
+                            }
+                        }
+                    })
+                }
+        }
+
+        function modal_play(i) {
+            var modal = document.getElementById("myModal"+i);
             modal.style.display = "block";
         }
 
-        // When the user clicks on <span> (x), close the modal
-        span.onclick = function() {
+        function modal_close(i) {
+            var modal = document.getElementById("myModal"+i);
             modal.style.display = "none";
         }
 
-        // When the user clicks anywhere outside of the modal, close it
-        window.onclick = function(event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
+         
+
+        function edit_inventory(id) {
+            let query_params = `?id=${id}`
+            window.location.href = "{{ url_for('edit_inventory') }}" + query_params;
         }
 
-         
+        function remove_inventory(id) {
+            $.ajax({
+                type: "DELETE",
+                url: "/api/delete_inventory",
+                data: {'id_give': id},
+                success: function (response) {
+                    if (response['result'] == 'success') {
+                            alert('Deleting the inventory')
+                            window.location.reload()
+                    }
+                }
+            })
+        }
+
         </script>
 </body>
 </html>

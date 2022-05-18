@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Inventory Tracker</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+    <link rel="stylesheet" href="../static/styles.css?ver=90">
+    <script>
+    </script>
+</head>
+<body class="background_color">
+    <form class="add_invent_form">
+        <div id="add_inv_btn">
+            <form>
+                <input type="submit" value="Back" class="navbar_btn2" id="back_btn" formaction="{{ url_for('home') }}">
+            </form>
+            <input type="submit" value="Save" class="navbar_btn2" onclick="edit_inventory();">
+        </div>
+        <div class="add_invent_detail">
+            <label class="label_att"></label><br>
+            <label class="label_att"></label><br>
+            <label class="label_att">Name:</label><br>
+            <input class="input_att" id="inv_name" type="text"><br><br>
+            <p><label class="label_att">Description:</label></p>
+            <textarea class="textarea_att" id="inv_desc"></textarea><br><br>
+            <label class="label_att">Manufacturer:</label><br>
+            <input class="input_att" type="text" id="inv_manu"><br><br>
+            <label class="label_att">Model:</label><br>
+            <input class="input_att" type="text" id="inv_model"><br><br>
+            <label class="label_att">Barcode:</label><br>
+            <input class="input_att" type="text" id="inv_bar"><br><br>
+            <label class="label_att">Serial Number:</label><br>
+            <input class="input_att" type="text" id="inv_sn"><br><br>
+            <label class="label_att">Category:</label><br>
+            <input class="input_att" type="text" id="inv_cat"><br><br>
+            <label class="label_att">Warehouse Location:</label><br>
+            <select id="warehouse_list" class="cars">
+            </select><br><br>
+            <label class="label_att">Quantity:</label><br>
+            <input class="input_att" type="text" id="inv_quan"><br><br>
+            <label class="label_att">Purchase Price:</label><br>
+            <input class="input_att" type="text" id="inv_pr"><br><br>
+            <label class="label_att">Purchase Date:</label><br>
+            <input class="input_att" type="text" id="inv_pd"><br><br>
+            <p><label class="label_att">Notes:</label></p>
+            <textarea class="textarea_att" id="inv_notes"></textarea><br><br>
+        </div>
+    </form>
+    <script>
+        $(document).ready(function(){
+            load_warehouse_list()
+            load_inventory_info()
+        });
+
+        function load_warehouse_list(){
+            $.ajax({
+                type: "GET",
+                url: "/api/get_warehouse",
+                data: {},
+                success: function(response){
+                    let warehouse = response['warehouse_list']
+                    for (let i = 0; i < warehouse.length; i++) {
+                        let location = warehouse[i]
+                        let tempHtml = `<option>${location}</option>`
+                        $('#warehouse_list').append(tempHtml) 
+                    }
+                }
+            })
+        }
+
+        function load_inventory_info(){
+            document.getElementById("inv_name").value = "{{ name }}"
+            document.getElementById("inv_desc").value = "{{ description }}"
+            document.getElementById("inv_manu").value = "{{ manufacturer }}"
+            document.getElementById("inv_model").value = "{{ model }}"
+            document.getElementById("inv_bar").value = "{{ barcode }}"
+            document.getElementById("inv_sn").value = "{{ serial_number }}"
+            document.getElementById("inv_cat").value = "{{ category }}"
+            document.getElementById("warehouse_list").value = "{{ warehouse_location }}"
+            document.getElementById("inv_quan").value = "{{ quantity }}"
+            document.getElementById("inv_pr").value = "{{ purchase_price }}"
+            document.getElementById("inv_pd").value = "{{ purchase_date }}"
+            document.getElementById("inv_notes").value = "{{ notes }}"
+        }
+
+        function edit_inventory() {
+            let id = "{{ id }}"
+            let name = $('#inv_name').val();
+            let description = $('#inv_desc').val();
+            let manufacturer = $('#inv_manu').val();
+            let model = $('#inv_model').val();
+            let barcode = $('#inv_bar').val();
+            let serial_number = $('#inv_sn').val();
+            let category = $('#inv_cat').val();
+            let warehouse_location = $('#warehouse_list').val();
+            let quantity = $('#inv_quan').val();
+            let purchase_price = $('#inv_pr').val();
+            let purchase_date = $('#inv_pd').val();
+            let notes = $('#inv_notes').val();
+            $.ajax({
+                type: "PUT",
+                url: "/api/put_inventory",
+                data: { id_give: id,
+                        name_give: name, 
+                        description_give: description, 
+                        manufacturer_give: manufacturer, 
+                        model_give: model,
+                        barcode_give: barcode,
+                        serial_number_give: serial_number,
+                        category_give: category,
+                        warehouse_location_give: warehouse_location,
+                        quantity_give: quantity,
+                        purchase_price_give: purchase_price,
+                        purchase_date_give: purchase_date,
+                        notes_give: notes
+                    },
+                success: function (response) {
+                    if (response["result"] == "success") {
+                        window.location.href = "/";
+                    } 
+                }
+            })
+
+        }
+    </script>
+</body>
+</html>

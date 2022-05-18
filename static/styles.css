@@ -25,6 +25,10 @@ body {
 
 .add_btns {
     margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+   
 }
 
 .navbar_btn {
@@ -64,7 +68,7 @@ body {
     padding-top: 5px;
 }
 
-#cars {
+.cars {
     width: 200px;
     height: 25px;
     margin-top: 10px;
@@ -77,7 +81,8 @@ body {
 }
 
 #add_inv_btn {
-    float: right;
+    display: flex;
+    justify-content: space-between;
 }
 
 .navbar_btn2 {
@@ -185,7 +190,8 @@ body {
     width: 150px;
     margin: 0px 20px;
 }
-.card-list {
+
+#card_list {
     text-align: center;
 }
 
@@ -243,3 +249,12 @@ body {
     font-family: Arial, Helvetica, sans-serif;
     margin: 5px;
   }
+ 
+#back_btn {
+    margin-left: 60px;
+}
+
+.add_invent_detail {
+    text-align: center;
+    margin-bottom: 50px;
+}
